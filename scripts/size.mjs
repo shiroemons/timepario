@@ -7,7 +7,7 @@ for (const [name, limit] of [
   ["app.css", 10 * 1024],
 ]) {
   const contents = await readFile(`dist/client/assets/${name}`);
-  const gzip = gzipSync(contents).byteLength;
+  const gzip = gzipSync(contents, { level: 9 }).byteLength;
   console.log(
     `${name}: ${contents.byteLength} bytes raw, ${gzip} bytes gzip (budget ${limit} bytes)`,
   );

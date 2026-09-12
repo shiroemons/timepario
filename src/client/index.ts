@@ -82,6 +82,7 @@ function initialize(app: HTMLElement) {
     date: HTMLElement;
     offset: HTMLElement;
     period: HTMLElement;
+    label: HTMLElement;
     identifier: HTMLElement;
     hour: SVGLineElement;
     minute: SVGLineElement;
@@ -177,7 +178,8 @@ function initialize(app: HTMLElement) {
     const heading = element("div", "card-heading");
     const title = element("h2");
     const change = element("button", "zone-change");
-    change.append(element("span", "zone-label", zone.label), createIcon("change"));
+    const label = element("span", "zone-label", zone.label);
+    change.append(label, createIcon("change"));
     change.type = "button";
     change.disabled = presentationActive;
     change.dataset.action = "change";
@@ -260,6 +262,7 @@ function initialize(app: HTMLElement) {
       date,
       offset,
       period,
+      label,
       identifier,
       hour,
       minute,
@@ -311,6 +314,7 @@ function initialize(app: HTMLElement) {
         view.date.textContent = clock.date;
         view.offset.textContent = clock.offset;
         view.period.textContent = ui[clock.dayPeriod];
+        view.label.textContent = `${view.zone.label} (${readZoneAbbreviation(now, view.zone.timeZone)})`;
         view.article.dataset.period = clock.dayPeriod;
         view.hour.setAttribute("transform", `rotate(${clock.hourAngle} 100 100)`);
         view.minute.setAttribute("transform", `rotate(${clock.minuteAngle} 100 100)`);
@@ -319,7 +323,6 @@ function initialize(app: HTMLElement) {
         view.error.hidden = true;
       } catch {
         delete view.article.dataset.period;
-        view.period.textContent = "";
         view.body.hidden = true;
         view.error.hidden = false;
       }
@@ -522,6 +525,9 @@ function initialize(app: HTMLElement) {
       picker.close();
     }
   });
+  for (const dialog of [picker, shareDialog]) {
+    dialog.onclick = (event) => event.target === dialog && dialog.close();
+  }
   closePicker.addEventListener("click", () => picker.close());
   closeShare.addEventListener("click", () => shareDialog.close());
   picker.addEventListener("close", () => {

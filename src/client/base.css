@@ -113,6 +113,9 @@ button {
   min-width: 0;
   line-height: 1.3;
 }
+.zone-label {
+  overflow-wrap: anywhere;
+}
 .button {
   min-height: 42px;
   padding: 8px 15px;
@@ -187,18 +190,18 @@ h1 {
   box-shadow: 0 4px 12px var(--shadow);
 }
 .clock-card[data-period="morning"] {
-  --face-fill: #fff0cc;
-  --face-stroke: #e5d6ad;
-  --face-marks: #806440;
-  --hand-color: #654923;
-  --second-color: #af512d;
-}
-.clock-card[data-period="day"] {
   --face-fill: #e6f3f8;
   --face-stroke: #c6dee8;
   --face-marks: #476e82;
   --hand-color: #24546c;
   --second-color: #b45732;
+}
+.clock-card[data-period="day"] {
+  --face-fill: #fff0cc;
+  --face-stroke: #e5d6ad;
+  --face-marks: #806440;
+  --hand-color: #654923;
+  --second-color: #af512d;
 }
 .clock-card[data-period="evening"] {
   --face-fill: #f4d6bd;

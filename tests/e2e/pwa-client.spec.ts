@@ -106,7 +106,7 @@ test("offline fallback uses the requested clock path and invalid paths never tur
   );
   await page.goto("/JST,UTC");
   await expect(page).toHaveURL(/\/jst,utc$/);
-  await expect(page.locator(".zone-label")).toHaveText(["東京", "UTC"]);
+  await expect(page.locator(".zone-label")).toHaveText(["東京 (JST)", "UTC (UTC)"]);
   await expect(page.locator(".clock-offset")).toHaveText(["UTC+09:00", "UTC+00:00"]);
   await page.route("**/jst,,utc", (route) =>
     route.fulfill({ status: 200, contentType: "text/html", body }),

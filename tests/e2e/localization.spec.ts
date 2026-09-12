@@ -23,7 +23,11 @@ test.describe("Japanese browser preferences", () => {
     await page.goto("/jst,pst,pt");
     await expect(page.locator(".digital-time")).toHaveText(["21:34:56", "04:34:56", "05:34:56"]);
     await expect(page.locator(".clock-offset")).toHaveText(["UTC+09:00", "UTC−08:00", "UTC−07:00"]);
-    await expect(page.locator(".zone-label")).toHaveText(["東京", "太平洋標準時", "ロサンゼルス"]);
+    await expect(page.locator(".zone-label")).toHaveText([
+      "東京 (JST)",
+      "太平洋標準時 (PST)",
+      "ロサンゼルス (PDT)",
+    ]);
     await expect(page.getByRole("button", { name: "時計を追加", exact: true })).toBeDisabled();
   });
 
@@ -45,7 +49,7 @@ test.describe("Japanese browser preferences", () => {
     await expect(page).toHaveURL(/\/Europe~London,utc$/);
     await expect(page.getByRole("status")).toHaveText("ロンドンを移動しました。");
     await page.goBack();
-    await expect(page.locator(".zone-label")).toHaveText(["UTC", "ロンドン"]);
+    await expect(page.locator(".zone-label")).toHaveText(["UTC (UTC)", "ロンドン (GMT+1)"]);
     await page.getByRole("button", { name: "ロンドンを削除", exact: true }).click();
     await expect(page.getByRole("status")).toHaveText("ロンドンを削除しました。");
     await page.goBack();
@@ -151,7 +155,7 @@ test.describe("Japanese browser preferences", () => {
     }
     await page.locator(".zone-option").first().click();
     await expect(page).toHaveURL(/\/utc,America~Mexico_City$/);
-    await expect(page.locator(".zone-label")).toHaveText(["UTC", "メキシコシティー"]);
+    await expect(page.locator(".zone-label")).toHaveText(["UTC (UTC)", "メキシコシティー (CST)"]);
   });
 });
 

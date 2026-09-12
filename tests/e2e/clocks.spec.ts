@@ -25,6 +25,11 @@ test("device zone, explicit precedence, stable SVG and seconds", async ({ page }
   await page.goto("/jst,pst,pt");
   await expect(page.locator(".digital-time")).toHaveText(["21:34:56", "04:34:56", "05:34:56"]);
   await expect(page.locator(".clock-offset")).toHaveText(["UTC+09:00", "UTC−08:00", "UTC−07:00"]);
+  await expect(page.locator(".zone-label")).toHaveText([
+    "Tokyo (JST)",
+    "Pacific Standard Time (PST)",
+    "Los Angeles (PDT)",
+  ]);
   await expect(page.locator('[data-zone="jst"] .hand-second')).toHaveAttribute(
     "transform",
     "rotate(336 100 100)",
@@ -34,6 +39,13 @@ test("device zone, explicit precedence, stable SVG and seconds", async ({ page }
   });
   await page.clock.runFor(1000);
   await expect(page.locator(".digital-time")).toHaveText(["21:34:57", "04:34:57", "05:34:57"]);
+  await page.clock.setSystemTime(new Date("2026-01-01T12:34:56Z"));
+  await page.clock.runFor(1000);
+  await expect(page.locator(".zone-label")).toHaveText([
+    "Tokyo (JST)",
+    "Pacific Standard Time (PST)",
+    "Los Angeles (PST)",
+  ]);
   await expect(page.locator('[data-zone="jst"]')).toHaveAttribute("data-preserved", "true");
   await expect(page.locator(".digital-time[aria-live]")).toHaveCount(0);
 });
@@ -89,6 +101,17 @@ test("search does not alter history and Escape returns keyboard focus", async ({
   await expect(page).toHaveURL(/\/Europe~London,utc$/);
 });
 
+test("clicking outside the time-zone dialog closes it and restores focus", async ({ page }) => {
+  await page.goto("/utc");
+  const add = page.getByRole("button", { name: "Add clock", exact: true });
+  await add.click();
+  const dialog = page.getByRole("dialog", { name: "Add a time zone" });
+  await expect(dialog).toBeVisible();
+  await page.mouse.click(5, 5);
+  await expect(dialog).toBeHidden();
+  await expect(add).toBeFocused();
+});
+
 test("clipboard failure exposes selected canonical URL and success is announced", async ({
   page,
 }) => {
@@ -117,7 +140,8 @@ test("clipboard failure exposes selected canonical URL and success is announced"
           node.selectionEnd === node.value.length && node.selectionStart === 0,
       ),
   ).toBe(true);
-  await page.keyboard.press("Escape");
+  await page.mouse.click(5, 5);
+  await expect(page.getByRole("dialog", { name: "Copy link manually" })).toBeHidden();
   await expect(copy).toBeFocused();
   await expect(copy).not.toHaveAttribute("data-copy-state", "success");
   await page.evaluate(() => {
