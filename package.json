@@ -1,0 +1,35 @@
+{
+  "name": "timepario",
+  "version": "0.1.0",
+  "private": true,
+  "type": "module",
+  "packageManager": "pnpm@11.19.0",
+  "engines": {
+    "node": ">=24.0.0"
+  },
+  "scripts": {
+    "dev": "node scripts/dev.mjs",
+    "typecheck": "tsc --noEmit",
+    "lint": "biome check .",
+    "format": "biome check --write .",
+    "test": "vitest run",
+    "test:e2e": "playwright test",
+    "build:client": "node scripts/build-client.mjs",
+    "build:worker": "wrangler deploy --dry-run --outdir dist/worker",
+    "build": "pnpm build:client && pnpm build:worker",
+    "size": "node scripts/size.mjs",
+    "deploy": "pnpm build:client && wrangler deploy"
+  },
+  "dependencies": {
+    "hono": "4.13.7"
+  },
+  "devDependencies": {
+    "@biomejs/biome": "2.5.13",
+    "@playwright/test": "1.63.0",
+    "@types/node": "22.20.2",
+    "esbuild": "0.28.2",
+    "typescript": "7.0.2",
+    "vitest": "5.0.0",
+    "wrangler": "4.131.1"
+  }
+}

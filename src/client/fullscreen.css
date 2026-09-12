@@ -1,0 +1,270 @@
+.header-actions {
+  display: flex;
+  align-items: center;
+  justify-content: flex-end;
+  flex-wrap: wrap;
+  gap: 8px;
+  max-width: 100%;
+}
+.header-actions .button {
+  border-color: #cfdbcf;
+  border-radius: 12px;
+  background: #edf2e8;
+  color: #48695c;
+  font-weight: 550;
+}
+.header-actions .button:hover:not(:disabled) {
+  border-color: #acc3ae;
+  background: #e3ecdf;
+  color: #345845;
+}
+.header-actions .button:focus-visible {
+  outline: 2px solid #6a8c79;
+  outline-offset: 2px;
+}
+.header-actions .button:active:not(:disabled) {
+  border-color: #94b298;
+  background: #d8e6d5;
+  box-shadow: inset 0 1px 2px #375b4320;
+}
+.header-actions #share-button {
+  min-inline-size: 9.5em;
+}
+.header-actions .button[data-copy-state="success"] {
+  border-color: #b4d0b8;
+  background: #dbeedc;
+  color: #37634b;
+}
+.header-actions .button[data-copy-state="success"]:hover:not(:disabled) {
+  background: #d2e8d3;
+}
+.presentation-controls {
+  position: fixed;
+  top: 20px;
+  right: 24px;
+  z-index: 101;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  max-width: calc(100% - 48px);
+  padding: 8px 10px;
+  border: 1px solid #526064;
+  border-radius: 12px;
+  background: #1d282ce8;
+  color: #e9eeea;
+  transition: opacity 180ms ease;
+}
+.presentation-controls .button {
+  flex-shrink: 0;
+  background: #344347;
+  border-color: #627378;
+  color: #fff;
+}
+.presentation-controls .button:hover {
+  background: #455b60;
+}
+#presentation-hint {
+  max-width: 32em;
+  font-size: 0.75rem;
+}
+#app.is-presentation {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  overflow: auto;
+  background: #141d21;
+  color: #edf2ee;
+  color-scheme: dark;
+}
+#app.is-presentation:focus {
+  outline: none;
+}
+#app.is-presentation.is-idle .presentation-controls:not(:focus-within) {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+#app.is-presentation.is-idle:not(:has(.presentation-controls:focus-within)) {
+  cursor: none;
+}
+#app.is-presentation .app-shell {
+  width: 100%;
+  max-width: none;
+  min-height: 100svh;
+  padding: 80px clamp(24px, 4vw, 80px) 32px;
+}
+#app.is-presentation
+  :is(.app-header, .workspace-heading, .workspace-meta, .app-footer, .status, .card-actions) {
+  display: none;
+}
+#app.is-presentation .workspace {
+  display: grid;
+  align-content: center;
+  padding: 0;
+}
+#app.is-presentation .clock-grid {
+  width: 100%;
+  max-width: none;
+  gap: clamp(24px, 4vw, 80px);
+  align-items: start;
+}
+#app.is-presentation .clock-grid[data-count="1"] {
+  grid-template-columns: minmax(0, 1fr);
+}
+#app.is-presentation .clock-card {
+  padding: 0;
+  border: 0;
+  border-radius: 0;
+  background: transparent;
+  box-shadow: none;
+  text-align: center;
+}
+#app.is-presentation .card-heading {
+  min-height: 82px;
+  display: block;
+}
+#app.is-presentation .card-heading h2 {
+  font-size: clamp(1.4rem, 2.2vw, 2.3rem);
+  line-height: 1.3;
+  letter-spacing: -0.02em;
+}
+#app.is-presentation .zone-change {
+  opacity: 1;
+  cursor: default;
+  color: inherit;
+  text-align: center;
+}
+#app.is-presentation .zone-change .ui-icon {
+  display: none;
+}
+#app.is-presentation.is-idle:not(:has(.presentation-controls:focus-within)) .zone-change {
+  cursor: none;
+}
+#app.is-presentation .zone-description {
+  max-width: none;
+  margin-top: 6px;
+  color: #a5b7b8;
+  font-size: 0.8rem;
+  text-align: center;
+}
+#app.is-presentation .clock-body {
+  flex-direction: column;
+  flex-wrap: nowrap;
+  gap: clamp(16px, 3svh, 32px);
+  padding: 0;
+}
+#app.is-presentation .analog-clock {
+  width: min(100%, 42svh);
+}
+#app.is-presentation .clock-grid[data-count="1"] .analog-clock {
+  width: min(60vw, 40svh);
+}
+#app.is-presentation .clock-readout {
+  min-width: 0;
+  max-width: 100%;
+  text-align: center;
+}
+#app.is-presentation .digital-time {
+  font-size: clamp(2rem, 4vw, 6rem);
+  line-height: 1.15;
+  color: #f2f6f2;
+  letter-spacing: -0.04em;
+}
+#app.is-presentation .clock-grid[data-count="1"] .digital-time {
+  font-size: clamp(3rem, 7vw, 9rem);
+}
+#app.is-presentation .clock-date {
+  margin-top: 10px;
+  color: #bdcbcb;
+  font-size: 1rem;
+}
+#app.is-presentation .clock-context {
+  justify-content: center;
+  margin-top: 12px;
+  gap: 7px;
+}
+#app.is-presentation .clock-offset {
+  color: #c2d3d0;
+  background: #28383c;
+}
+#app.is-presentation .card-footer {
+  display: flex;
+  justify-content: center;
+  padding: 0;
+  margin-top: 14px;
+  min-height: 0;
+  border: 0;
+}
+#app.is-presentation .zone-id:not([data-comparison]) {
+  display: none;
+}
+#app.is-presentation .zone-id[data-comparison] {
+  font-size: 0.8rem;
+  color: #b5c8c4;
+}
+@media (max-width: 640px) {
+  .app-header {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr);
+    gap: 4px;
+    min-height: 0;
+    padding-block: 6px;
+  }
+  .app-header .brand {
+    font-size: 18px;
+    gap: 6px;
+    justify-self: start;
+  }
+  .header-actions {
+    gap: 4px;
+    width: 100%;
+  }
+  .header-actions .button {
+    flex: 1 1 auto;
+    padding-inline: 5px;
+    gap: 4px;
+    font-size: 0.7rem;
+  }
+  .workspace {
+    padding-top: 12px;
+  }
+  .workspace-heading {
+    margin-bottom: 14px;
+  }
+  .presentation-controls {
+    top: 12px;
+    right: 12px;
+    max-width: calc(100% - 24px);
+    flex-wrap: wrap;
+    gap: 6px 10px;
+  }
+  #app.is-presentation .app-shell {
+    padding: 124px 20px 36px;
+  }
+  #app.is-presentation .clock-grid {
+    grid-template-columns: minmax(0, 1fr);
+    gap: 44px;
+  }
+  #app.is-presentation .card-heading {
+    min-height: 0;
+    margin-bottom: 16px;
+  }
+  #app.is-presentation .analog-clock,
+  #app.is-presentation .clock-grid[data-count="1"] .analog-clock {
+    width: min(54vw, 240px);
+  }
+  #app.is-presentation .digital-time,
+  #app.is-presentation .clock-grid[data-count="1"] .digital-time {
+    font-size: 2rem;
+  }
+  #app.is-presentation .clock-offset,
+  #app.is-presentation .day-period {
+    font-size: 0.72rem;
+    padding: 3px 7px;
+  }
+}
+@media (prefers-reduced-motion: reduce) {
+  .presentation-controls {
+    transition: none;
+  }
+}

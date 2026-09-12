@@ -1,0 +1,13 @@
+{
+  "$schema": "node_modules/wrangler/config-schema.json",
+  "name": "timepario",
+  "main": "src/server/index.tsx",
+  "compatibility_date": "2026-09-12",
+  "assets": {
+    "directory": "./dist/client",
+    "html_handling": "none",
+    "not_found_handling": "none"
+  },
+  "dev": { "port": 8787 },
+  "workers_dev": true
+}

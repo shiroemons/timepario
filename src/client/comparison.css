@@ -1,0 +1,34 @@
+.comparison-controls {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: center;
+  gap: 5px 14px;
+}
+.comparison-control {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  max-width: 100%;
+}
+.comparison-control > span {
+  white-space: nowrap;
+}
+.comparison-control select {
+  min-width: 0;
+  max-width: min(12rem, 45vw);
+  min-height: 28px;
+  padding: 3px 6px;
+  border: 1px solid #d8e1d4;
+  border-radius: 6px;
+  color: #4f6657;
+  background: #f8faf5;
+  font: inherit;
+}
+.workspace-meta:has(.comparison-controls) {
+  flex-wrap: wrap;
+  align-items: center;
+}
+.zone-id[data-comparison] {
+  font-variant-numeric: tabular-nums;
+}
