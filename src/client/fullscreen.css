@@ -7,36 +7,36 @@
   max-width: 100%;
 }
 .header-actions .button {
-  border-color: #cfdbcf;
+  border-color: var(--border);
   border-radius: 12px;
-  background: #edf2e8;
-  color: #48695c;
+  background: var(--tint);
+  color: var(--tint-text);
   font-weight: 550;
 }
 .header-actions .button:hover:not(:disabled) {
-  border-color: #acc3ae;
-  background: #e3ecdf;
-  color: #345845;
+  border-color: var(--hover-border);
+  background: var(--hover);
+  color: var(--hover-text);
 }
 .header-actions .button:focus-visible {
-  outline: 2px solid #6a8c79;
+  outline: 2px solid var(--focus);
   outline-offset: 2px;
 }
 .header-actions .button:active:not(:disabled) {
-  border-color: #94b298;
-  background: #d8e6d5;
-  box-shadow: inset 0 1px 2px #375b4320;
+  border-color: var(--accent);
+  background: var(--active);
+  box-shadow: inset 0 1px 2px var(--shadow);
 }
 .header-actions #share-button {
   min-inline-size: 9.5em;
 }
 .header-actions .button[data-copy-state="success"] {
-  border-color: #b4d0b8;
-  background: #dbeedc;
-  color: #37634b;
+  border-color: var(--hover-border);
+  background: var(--success);
+  color: var(--success-text);
 }
 .header-actions .button[data-copy-state="success"]:hover:not(:disabled) {
-  background: #d2e8d3;
+  background: var(--success-hover);
 }
 .presentation-controls {
   position: fixed;

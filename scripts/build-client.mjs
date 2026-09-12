@@ -6,6 +6,7 @@ import { build } from "esbuild";
 export const browserBuildOptions = {
   entryPoints: [
     { in: "src/client/index.ts", out: "assets/app" },
+    { in: "src/client/theme.ts", out: "assets/theme" },
     { in: "src/client/styles.css", out: "assets/app" },
   ],
   outdir: "dist/client",

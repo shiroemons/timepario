@@ -22,6 +22,42 @@ export function AppShell({
           <SvgIcon name="clock" />
           <span class="brand-label">{APP.name}</span>
         </a>
+        <fieldset class="theme-control">
+          <legend>{ui.themeLabel}</legend>
+          <button
+            class="theme-option"
+            type="button"
+            data-theme-option="system"
+            aria-label={ui.themeSystem}
+            title={ui.themeSystem}
+            aria-pressed="false"
+            disabled
+          >
+            <SvgIcon name="theme-system" />
+          </button>
+          <button
+            class="theme-option"
+            type="button"
+            data-theme-option="light"
+            aria-label={ui.themeLight}
+            title={ui.themeLight}
+            aria-pressed="false"
+            disabled
+          >
+            <SvgIcon name="theme-light" />
+          </button>
+          <button
+            class="theme-option"
+            type="button"
+            data-theme-option="dark"
+            aria-label={ui.themeDark}
+            title={ui.themeDark}
+            aria-pressed="false"
+            disabled
+          >
+            <SvgIcon name="theme-dark" />
+          </button>
+        </fieldset>
         <div class="header-actions">
           <button class="button" id="presentation-button" type="button" disabled>
             <SvgIcon name="expanded" />

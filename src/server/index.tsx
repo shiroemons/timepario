@@ -82,6 +82,7 @@ function Document({
           <link rel="icon" type="image/svg+xml" href={`/favicon.svg?v=${PWA_VERSION}`} />
           <link rel="apple-touch-icon" href={`/icons/apple-touch-icon.png?v=${PWA_VERSION}`} />
           <link rel="manifest" href={`/manifest.webmanifest?v=${PWA_VERSION}`} />
+          <script src={`/assets/theme.js?v=${PWA_VERSION}`} />
           <link rel="stylesheet" href={`/assets/app.css?v=${PWA_VERSION}`} />
         </head>
         <body>{children}</body>

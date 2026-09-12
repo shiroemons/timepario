@@ -19,10 +19,10 @@
   max-width: min(12rem, 45vw);
   min-height: 28px;
   padding: 3px 6px;
-  border: 1px solid #d8e1d4;
+  border: 1px solid var(--border);
   border-radius: 6px;
-  color: #4f6657;
-  background: #f8faf5;
+  color: var(--tint-text);
+  background: var(--field);
   font: inherit;
 }
 .workspace-meta:has(.comparison-controls) {

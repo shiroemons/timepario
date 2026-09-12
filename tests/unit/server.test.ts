@@ -91,7 +91,7 @@ describe("Worker HTML routes", () => {
     expect(invalid.status).toBe(400);
     const invalidHtml = await invalid.text();
     expect(invalidHtml).not.toContain("alert");
-    expect(invalidHtml).not.toContain("<script");
+    expect(invalidHtml).not.toMatch(/<script[^>]*>[^<]+<\/script>/);
     expect(invalidHtml).toContain('name="robots" content="noindex"');
   });
 
@@ -204,6 +204,19 @@ describe("Worker HTML routes", () => {
     const html = await response.text();
     expect(response.status).toBe(400);
     expect(html).not.toContain("<img");
-    expect(html).not.toContain("<script");
+    expect(html).not.toMatch(/<script[^>]*>[^<]+<\/script>/);
   });
+
+  it.each(["/utc", "/offline", "/xyz"])(
+    "loads the versioned theme bootstrap before styles under the existing CSP: %s",
+    async (path) => {
+      const response = await app.request(path);
+      const html = await response.text();
+      const bootstrap = `<script src="/assets/theme.js?v=${PWA_VERSION}"></script>`;
+      expect(html).toContain(bootstrap);
+      expect(html.indexOf(bootstrap)).toBeLessThan(html.indexOf('rel="stylesheet"'));
+      expect(html).not.toMatch(/<script[^>]*>[^<]+<\/script>/);
+      expect(response.headers.get("Content-Security-Policy")).not.toContain("unsafe-inline");
+    },
+  );
 });

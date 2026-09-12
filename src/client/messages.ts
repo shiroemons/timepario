@@ -3,6 +3,10 @@ import type { Language } from "../shared/language";
 
 export const ui = {
   tagline: APP.tagline,
+  themeLabel: "Theme",
+  themeSystem: "System",
+  themeLight: "Light",
+  themeDark: "Dark",
   share: "Copy link",
   copyTitle: "Copy a link to the displayed clocks",
   copySuccess: "Link copied",
@@ -75,6 +79,10 @@ type UiMessages = {
 
 const ja: UiMessages = {
   tagline: "世界の時刻を、並べて。",
+  themeLabel: "テーマ",
+  themeSystem: "システム",
+  themeLight: "ライト",
+  themeDark: "ダーク",
   share: "リンクをコピー",
   copyTitle: "表示中の時計のリンクをコピー",
   copySuccess: "コピーしました",

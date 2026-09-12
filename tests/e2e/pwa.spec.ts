@@ -164,16 +164,29 @@ test.describe("real offline service-worker lifecycle", () => {
     });
     const url = (path: string) => `${serverGate.origin}${path}`;
     await page.goto(url("/utc"));
+    await page.locator('[data-theme-option="dark"]').click();
     await ready(page);
     serverGate.available(false);
     if (browserName === "chromium") await context.setOffline(true);
     const offline = await page.goto(url("/Europe~Berlin,Asia~Kathmandu,pst"));
     expect(offline?.status()).toBe(200);
     await expect(page.locator("#app")).toHaveAttribute("data-offline-shell", "true");
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "dark");
+    await expect(page.locator('[data-theme-option="dark"]')).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
     if (browserName !== "chromium") expect(serverGate.blockedRequests()).toBeGreaterThan(0);
     await expect(page.locator(".digital-time")).toHaveText(["14:34:56", "18:19:56", "04:34:56"]);
     await page.reload();
     await expect(page.locator(".clock-card")).toHaveCount(3);
+    await expect(page.locator('[data-theme-option="dark"]')).toHaveAttribute(
+      "aria-pressed",
+      "true",
+    );
+    await page.locator('[data-theme-option="system"]').click();
+    await page.emulateMedia({ colorScheme: "light" });
+    await expect(page.locator("html")).toHaveAttribute("data-theme", "light");
     await page.locator('[data-zone="pst"] [data-action="earlier"]').click();
     await expect(page).toHaveURL(/\/Europe~Berlin,pst,Asia~Kathmandu$/);
     await page.goBack();

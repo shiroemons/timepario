@@ -3,6 +3,7 @@ import { gzipSync } from "node:zlib";
 
 for (const [name, limit] of [
   ["app.js", 20 * 1024],
+  ["theme.js", 1 * 1024],
   ["app.css", 10 * 1024],
 ]) {
   const contents = await readFile(`dist/client/assets/${name}`);
