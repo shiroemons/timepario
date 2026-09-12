@@ -116,6 +116,8 @@ IANA 名のすべての `/` を `~` に置き換えます。短縮名は大文�
 
 ## Cloudflare Workers へのデプロイ
 
+公開URL: [TimePario](https://timepario.shiroemons.workers.dev)（2026-09-12公開）。
+
 Cloudflare アカウントと Workers へのデプロイ権限が必要です。必要に応じて `wrangler.jsonc` に対象アカウントの `account_id` や独自ドメインの `routes` を設定してください。プロジェクト名は `timepario` です。DB / KV などのリソースは不要です。
 
 ```sh
@@ -123,7 +125,7 @@ pnpm exec wrangler login
 pnpm deploy
 ```
 
-CI などでは `CLOUDFLARE_API_TOKEN` と `CLOUDFLARE_ACCOUNT_ID` を環境変数として設定できます。認証情報をリポジトリへ保存しないでください。この実装作業では本番デプロイや外部リソース作成は行っていません。
+CI などでは `CLOUDFLARE_API_TOKEN` と `CLOUDFLARE_ACCOUNT_ID` を環境変数として設定できます。認証情報をリポジトリへ保存しないでください。
 
 ## 検証
 
@@ -145,7 +147,7 @@ CI などでは `CLOUDFLARE_API_TOKEN` と `CLOUDFLARE_ACCOUNT_ID` を環境変�
 
 `node:zlib.gzipSync` の実測値です。JS・CSS・日本語HTML・faviconのgzip合計は `/` が27,471 bytes、`/jst,pt,utc` が27,830 bytes。PWAは別途manifest・アイコン・Service Worker・オフライン画面を取得します。全PWAファイルを1回ずつ足したgzip合計は43,596 bytes（通常ページのHTMLを除く比較値）です。初回準備には既に読み込んだアセットの再取得もあり、この値は実際の通信量ではありません。OGP画像は通常表示やPWAキャッシュの対象外です。HTTPヘッダー・TLSのオーバーヘッドは含めません。配信ファイルと本番ビルド成果物の一致も確認しています。
 
-要求された初期機能に未実装事項はありません。本番公開・実機スマートフォン・スクリーンリーダーによる音声確認は未実施です。画面幅・文字拡大に応じて縦スクロールを許可し、通常の360×640では3時計の時刻を同時表示できます。
+要求された初期機能に未実装事項はありません。公開先でも時計表示・OGP配信・PWAのオフライン再読み込みを確認しました。実機スマートフォン・スクリーンリーダーによる音声確認は未実施です。画面幅・文字拡大に応じて縦スクロールを許可し、通常の360×640では3時計の時刻を同時表示できます。
 
 詳細は [検証記録](docs/verification.md)、[実装計画](docs/implementation-plan.md)、[設計判断](docs/decisions/0001-time-and-url.md)、[依存関係調査](docs/dependencies.md) を参照してください。スクリーンショットは `output/playwright/` に保存します（生成物のためGit対象外）。
 

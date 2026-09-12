@@ -1,12 +1,23 @@
 # 検証記録
 
+## Cloudflare Workers公開確認（2026-09-12）
+
+- 公開URL: <https://timepario.shiroemons.workers.dev>
+- デプロイ対象: `main` の `d179f70`。Worker名: `timepario`。
+- Version ID: `275923ca-f78d-45d7-a7e0-0ae4217cfe55`
+- `pnpm build` / `pnpm size`: 成功。公開したJS・CSS・Service Worker・OGP画像は本番ビルドとバイト単位で一致。
+- HTTPSのルート・3時計URL・manifest・Service Worker・OGP画像・オフライン画面: 200。存在しないアセット: 404。不正なタイムゾーン: 400。
+- canonical・OGPのURLが公開先originを参照することを確認。実SNSのクローラーによる表示確認は未実施。
+- Chromiumで3時計の表示、コンソールエラー0件を確認。Service Workerが有効化され、通信をオフラインにして再読み込みしても3時計を表示。オンライン復帰後の再読み込みも成功。
+- PWAキャッシュ: `timepario-pwa-8e3b429c3db1e1ff1ac8`。確認画像: `output/playwright/public-offline.png`（Git対象外）。
+
 ## 環境
 
 - 日付: 2026-09-12
 - OS: macOS
 - Node.js: 24.21.0
 - pnpm: 11.19.0
-- 実行対象: ローカル Workers runtime（Wrangler）。本番への公開なし。
+- 以下の検証の実行対象: ローカル Workers runtime（Wrangler）。公開先の確認は上記に記録。
 
 ## 確認対象
 
@@ -96,4 +107,4 @@ JS+CSS+favicon+日本語HTMLのgzip合計はトップ27,471 bytes、3時計27,83
 
 ## 未確認事項
 
-本番Cloudflareアカウントへの公開、実機スマートフォン、スクリーンリーダーによる音声確認はこのローカル検証の対象外。
+実機スマートフォン、スクリーンリーダーによる音声確認は未実施。
