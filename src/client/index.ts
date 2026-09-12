@@ -323,6 +323,8 @@ function initialize(app: HTMLElement) {
         view.error.hidden = true;
       } catch {
         delete view.article.dataset.period;
+        view.period.textContent = "";
+        view.label.textContent = view.zone.label;
         view.body.hidden = true;
         view.error.hidden = false;
       }
