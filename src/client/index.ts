@@ -14,7 +14,7 @@ import {
 } from "../shared/zones";
 import { createIcon, type IconName } from "./icons";
 import { facePath, uiFor } from "./messages";
-import { enablePresentation } from "./presentation";
+import { enablePresentation, isExpandedView, urlForExpandedView } from "./presentation";
 import { registerPwa } from "./pwa";
 import { enableReordering } from "./sortable";
 
@@ -49,6 +49,11 @@ function initialize(app: HTMLElement) {
     const node = app.querySelector<T>(selector);
     if (!node) throw new Error(`Missing application element: ${selector}`);
     return node;
+  }
+  function urlWithPath(pathname: string): string {
+    const url = new URL(location.href);
+    url.pathname = pathname;
+    return `${url.pathname}${url.search}${url.hash}`;
   }
   const grid = required("#clock-grid");
   const addButton = required<HTMLButtonElement>("#add-button");
@@ -594,10 +599,12 @@ function initialize(app: HTMLElement) {
     copyBusy = true;
     shareButton.disabled = true;
     shareButton.setAttribute("aria-busy", "true");
-    const url = new URL(pathForZones(zones), location.origin).href;
+    const url = new URL(pathForZones(zones), location.origin);
+    if (isExpandedView(location.search)) url.searchParams.set("view", "expanded");
+    const shareUrl = url.href;
     try {
       if (!navigator.clipboard?.writeText) throw new Error("Clipboard API unavailable");
-      await navigator.clipboard.writeText(url);
+      await navigator.clipboard.writeText(shareUrl);
       if (generation !== copyGeneration) return;
       showCopyFeedback(true);
       copyTimer = setTimeout(() => showCopyFeedback(), 2000);
@@ -605,7 +612,7 @@ function initialize(app: HTMLElement) {
     } catch {
       if (generation !== copyGeneration) return;
       announce(ui.copyFailed);
-      shareInput.value = url;
+      shareInput.value = shareUrl;
       if (!shareDialog.open) shareDialog.showModal();
       shareInput.focus();
       shareInput.select();
@@ -630,7 +637,7 @@ function initialize(app: HTMLElement) {
         if (mode === "auto") detectZone();
         else explicitHistory.set(parsed.canonicalPath, [...zones]);
         if (parsed.canonicalPath !== location.pathname)
-          history.replaceState(null, "", parsed.canonicalPath);
+          history.replaceState(null, "", urlWithPath(parsed.canonicalPath));
       }
       announce("");
       renderCards();
@@ -673,6 +680,20 @@ function initialize(app: HTMLElement) {
     showCopyFeedback();
     announce("");
   });
+
+  if (app.dataset.offlineShell === "true") {
+    try {
+      const parsed = parsePath(location.pathname);
+      mode = parsed.mode;
+      zones = parsed.zones;
+      if (parsed.canonicalPath !== location.pathname)
+        history.replaceState(null, "", urlWithPath(parsed.canonicalPath));
+    } catch (error) {
+      showStateError(error);
+      return;
+    }
+  }
+
   enablePresentation(app, {
     enter: required<HTMLButtonElement>("#fullscreen-button"),
     expanded: required<HTMLButtonElement>("#presentation-button"),
@@ -685,8 +706,14 @@ function initialize(app: HTMLElement) {
     exitFailureText: ui.fullscreenExitFailure,
     nativeExitText: ui.exitFullscreen,
     expandedExitText: ui.exitExpanded,
-    onChange(active) {
+    initialExpanded: isExpandedView(location.search),
+    onChange(active, presentationMode) {
       presentationActive = active;
+      if (presentationMode === "expanded") {
+        const currentUrl = `${location.pathname}${location.search}${location.hash}`;
+        const nextUrl = urlForExpandedView(new URL(location.href), active);
+        if (currentUrl !== nextUrl) history.replaceState(null, "", nextUrl);
+      }
       if (active) {
         copyGeneration++;
         showCopyFeedback();
@@ -701,24 +728,11 @@ function initialize(app: HTMLElement) {
   });
   registerPwa(() => announce(ui.offlineUnavailable));
 
-  if (app.dataset.offlineShell === "true") {
-    try {
-      const parsed = parsePath(location.pathname);
-      mode = parsed.mode;
-      zones = parsed.zones;
-      if (parsed.canonicalPath !== location.pathname)
-        history.replaceState(null, "", parsed.canonicalPath);
-    } catch (error) {
-      showStateError(error);
-      return;
-    }
-  }
-
   if (mode === "auto") detectZone();
   else {
     const canonical = pathForZones(zones);
     explicitHistory.set(canonical, [...zones]);
-    if (canonical !== location.pathname) history.replaceState(null, "", canonical);
+    if (canonical !== location.pathname) history.replaceState(null, "", urlWithPath(canonical));
   }
   renderCards();
   schedule();

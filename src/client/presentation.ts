@@ -1,3 +1,19 @@
+export type PresentationMode = "fullscreen" | "expanded";
+
+const viewQueryParameter = "view";
+const expandedView = "expanded";
+
+export function isExpandedView(search: string): boolean {
+  return new URLSearchParams(search).get(viewQueryParameter) === expandedView;
+}
+
+export function urlForExpandedView(url: URL, active: boolean): string {
+  const next = new URL(url.href);
+  if (active) next.searchParams.set(viewQueryParameter, expandedView);
+  else next.searchParams.delete(viewQueryParameter);
+  return `${next.pathname}${next.search}${next.hash}`;
+}
+
 type PresentationOptions = {
   enter: HTMLButtonElement;
   expanded: HTMLButtonElement;
@@ -10,13 +26,15 @@ type PresentationOptions = {
   exitFailureText: string;
   nativeExitText: string;
   expandedExitText: string;
-  onChange: (active: boolean) => void;
+  initialExpanded?: boolean;
+  onChange: (active: boolean, mode: PresentationMode | null) => void;
 };
 
 export function enablePresentation(app: HTMLElement, options: PresentationOptions): () => void {
   let active = false;
   let nativeActive = false;
   let pending = false;
+  let mode: PresentationMode | null = null;
   let trigger = options.enter;
   let generation = 0;
   let idleTimer: ReturnType<typeof setTimeout> | undefined;
@@ -39,13 +57,15 @@ export function enablePresentation(app: HTMLElement, options: PresentationOption
 
   function leave() {
     if (!active) return;
+    const previousMode = mode;
     active = false;
     nativeActive = false;
+    mode = null;
     generation++;
     stopIdle();
     app.classList.remove("is-presentation", "is-idle");
     options.controls.hidden = true;
-    options.onChange(false);
+    options.onChange(false, previousMode);
     if (originalTabIndex === null) app.removeAttribute("tabindex");
     else app.setAttribute("tabindex", originalTabIndex);
     options.enter.disabled = pending;
@@ -75,6 +95,7 @@ export function enablePresentation(app: HTMLElement, options: PresentationOption
   async function enter(native: boolean) {
     if (active || pending) return;
     active = true;
+    mode = native ? "fullscreen" : "expanded";
     trigger = native ? options.enter : options.expanded;
     const current = ++generation;
     app.classList.add("is-presentation");
@@ -82,7 +103,7 @@ export function enablePresentation(app: HTMLElement, options: PresentationOption
     options.controls.hidden = false;
     options.hint.textContent = options.hintText;
     options.exitLabel.textContent = native ? options.nativeExitText : options.expandedExitText;
-    options.onChange(true);
+    options.onChange(true, mode);
     app.focus();
     wake();
     if (!native) return;
@@ -151,6 +172,7 @@ export function enablePresentation(app: HTMLElement, options: PresentationOption
   document.addEventListener("visibilitychange", wake, listenerOptions);
   window.addEventListener("pagehide", stopIdle, listenerOptions);
   window.addEventListener("pageshow", wake, listenerOptions);
+  if (options.initialExpanded) void enter(false);
   return () => {
     leave();
     generation++;

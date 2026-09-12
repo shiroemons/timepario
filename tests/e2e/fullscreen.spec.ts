@@ -7,6 +7,30 @@ test.beforeEach(async ({ page }) => {
   await page.clock.pauseAt(fixed);
 });
 
+test("a shared expanded-view URL opens expanded and returns to its canonical clock URL", async ({
+  page,
+}) => {
+  await page.addInitScript(() => {
+    Object.defineProperty(Element.prototype, "requestFullscreen", {
+      value: async () => {
+        throw new Error("Expanded view must not request browser fullscreen");
+      },
+    });
+  });
+  await page.goto("/jst,utc?view=expanded");
+  await expect(page.locator("#app")).toHaveClass(/is-presentation/);
+  expect(await page.evaluate(() => document.fullscreenElement)).toBeNull();
+  await expect(page).toHaveURL(/\/jst,utc\?view=expanded$/);
+  await expect(page.getByRole("button", { name: "Return to clocks", exact: true })).toBeVisible();
+  await page.getByRole("button", { name: "Return to clocks", exact: true }).click();
+  await expect(page.locator("#app")).not.toHaveClass(/is-presentation/);
+  await expect(page).toHaveURL(/\/jst,utc$/);
+  await page.getByRole("button", { name: "Expanded view", exact: true }).click();
+  await expect(page).toHaveURL(/\/jst,utc\?view=expanded$/);
+  await page.getByRole("button", { name: "Return to clocks", exact: true }).click();
+  await expect(page).toHaveURL(/\/jst,utc$/);
+});
+
 test("expanded view never requests browser fullscreen and restores its own trigger and comparison", async ({
   page,
 }) => {
