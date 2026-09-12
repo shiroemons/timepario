@@ -112,6 +112,17 @@ test("clicking outside the time-zone dialog closes it and restores focus", async
   await expect(add).toBeFocused();
 });
 
+test("action feedback disappears after a short delay", async ({ page }) => {
+  await page.goto("/utc,jst");
+  await page.locator('[data-zone="utc"] [data-action="later"]').click();
+  const status = page.getByRole("status");
+  await expect(status).toHaveText("Moved UTC.");
+  await page.clock.runFor(2999);
+  await expect(status).toHaveText("Moved UTC.");
+  await page.clock.runFor(1);
+  await expect(status).toBeEmpty();
+});
+
 test("clipboard failure exposes selected canonical URL and success is announced", async ({
   page,
 }) => {

@@ -59,6 +59,7 @@ function initialize(app: HTMLElement) {
   let copyTimer: ReturnType<typeof setTimeout> | undefined;
   const modeNote = required("#mode-note");
   const status = required("#status");
+  let statusTimer: ReturnType<typeof setTimeout> | undefined;
   const capacity = required("#capacity");
   const limitNote = required("#limit-note");
   const comparisonSelect = required<HTMLSelectElement>("#comparison-base");
@@ -138,7 +139,14 @@ function initialize(app: HTMLElement) {
   document.body.append(picker, shareDialog);
 
   function announce(message: string) {
+    if (statusTimer !== undefined) clearTimeout(statusTimer);
     status.textContent = message;
+    statusTimer = message
+      ? setTimeout(() => {
+          status.textContent = "";
+          statusTimer = undefined;
+        }, 3000)
+      : undefined;
   }
 
   function detectZone() {
@@ -663,6 +671,7 @@ function initialize(app: HTMLElement) {
     stopTimer();
     copyGeneration++;
     showCopyFeedback();
+    announce("");
   });
   enablePresentation(app, {
     enter: required<HTMLButtonElement>("#fullscreen-button"),
