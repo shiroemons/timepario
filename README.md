@@ -4,6 +4,10 @@
 
 **[TimeParioを開く](https://timepario.shiroemons.workers.dev)**
 
+## 名前の由来
+
+- 読み方は「タイムパリオ」。Time と parallel をもとにした造語で、複数地域の時間を並べて見るイメージを表しています。
+
 ## できること
 
 - アナログ・デジタル時計で時刻を比較
