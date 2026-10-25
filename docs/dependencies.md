@@ -19,6 +19,28 @@ Wrangler の安定版 4.131.1 は内部で `miniflare@5.20260911.0-alpha` を依
 
 確認コマンド: `npm view <package> version license engines dist.unpackedSize time.modified --json`。
 
+## HTTP2Shellの確認（2026-10-25）
+
+HTTP2Shell（CVE-2026-111497）はBrotliデコーダーの境界外書き込みの脆弱性。
+[Node.jsの公式告知](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases)に基づき、
+開発・ビルド・デプロイに使うNode.jsを24.22.1以降の24系、または26.12.1以降の26系に制限する。
+推奨版は `.node-version` の24.22.1。pnpmの `engineStrict` で対象外の版によるインストールを拒否する。
+Node.jsに修正がバックポートされている場合があるため、内蔵Brotliのバージョン文字列だけで判定しない。
+
+- アプリのサーバー処理はURLとヘッダーを読み、HTMLを返す。リクエスト本文の展開、外部URLの取得、
+  `node:zlib` によるBrotli展開はない。Service Workerの `fetch` はブラウザーで実行される。
+- WranglerにはBrotliレスポンスを展開するHTTPクライアントが含まれるため、実行するNode.jsの更新が必要。
+- ローカル開発用の `workerd@1.20260911.1` は
+  [Brotli 1.2.0.bcr.3を参照](https://github.com/cloudflare/workerd/blob/v1.20260911.1/build/deps/gen/deps.MODULE.bazel)する。
+  調査時点の最新 `workerd@1.20261025.1` も
+  [同じ版を参照](https://github.com/cloudflare/workerd/blob/v1.20261025.1/build/deps/gen/deps.MODULE.bazel)しており、
+  [Brotli 1.2.1の修正](https://github.com/google/brotli/releases/tag/v1.2.1)を含むリリースは確認できていない。
+  Wranglerの更新だけで解消する根拠がないため、依存は据え置く。
+- 開発サーバーは既存設定の `127.0.0.1` で使い、外部公開しない。
+  workerdの修正版公開後に、それを含むWranglerへ更新して検証する必要がある。
+- 本番はCloudflare管理のWorkersランタイム。npmのworkerdとは更新経路が異なる。
+  本番基盤の修正状況やこのアプリからの脆弱性到達性は確認できておらず、安全性を断定しない。
+
 ## 日本語の都市名データ
 
 Unicode CLDR JSONのコミット `1aaabe99aa652d6f22ea488cf25baea46aa69b42` から、日本語の `exemplarCity` とBCP 47のタイムゾーン別名を抽出して同梱。翻訳ライブラリや実行時通信は追加していない。

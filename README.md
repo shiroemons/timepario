@@ -48,8 +48,13 @@
 
 ## 開発
 
-- 必要環境：Node.js 24 LTS / pnpm 11.19.0
+- 必要環境：Node.js 24.22.1以降の24系（推奨）または26.12.1以降の26系 / pnpm 11.19.0
 - 構成：TypeScript / Hono / Cloudflare Workers
+
+`.node-version` は推奨版の24.22.1を指定しています。HTTP2Shell（CVE-2026-111497）の
+[Node.js公式修正版](https://nodejs.org/en/blog/vulnerability/october-2026-security-releases)を
+下限とし、pnpmは対象外のNode.jsでのインストールを拒否します。開発・ビルド・デプロイ環境で
+`node --version` を確認し、更新前から起動している開発サーバーなどは再起動してください。
 
 ```sh
 pnpm install --frozen-lockfile
